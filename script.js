@@ -1,7 +1,7 @@
 /* SVG/XHTML compatibility */
 function __vantaSetBodyHTML(markup) {
-  const target = document.querySelector("foreignObject html body");
-  if (!target) throw new Error("Vanta SVG body was not found");
+  const target = document.body || document.querySelector("foreignObject > html > body");
+  if (!target) throw new Error("Vanta SVG body was not initialized");
   const parsed = new DOMParser().parseFromString(markup, "text/html");
   while (target.firstChild) target.removeChild(target.firstChild);
   for (const node of Array.from(parsed.body.childNodes)) {
@@ -9,21 +9,6 @@ function __vantaSetBodyHTML(markup) {
   }
 }
 
-
-/* SVG/XHTML DOM compatibility */
-(() => {
-  const XHTML_NS = "http://www.w3.org/1999/xhtml";
-  const originalCreateElement = document.createElement.bind(document);
-  const originalCreateElementNS = document.createElementNS.bind(document);
-  document.createElement = function(tagName, options) {
-    if (typeof tagName === "string") return originalCreateElementNS(XHTML_NS, tagName, options);
-    return originalCreateElement(tagName, options);
-  };
-  document.createElementNS = function(namespaceURI, qualifiedName, options) {
-    if (namespaceURI == null || namespaceURI === XHTML_NS) return originalCreateElementNS(XHTML_NS, qualifiedName, options);
-    return originalCreateElementNS(namespaceURI, qualifiedName, options);
-  };
-})();
 
 (() => {
   "use strict";
@@ -227,11 +212,11 @@ function __vantaSetBodyHTML(markup) {
             iframe.title='Vanta browser content';
             iframe.referrerPolicy='no-referrer';
             iframe.style.display='none';
-            const frameHost = webView.querySelector('div');
-            if (!frameHost) throw new Error('Vanta web view container was not found');
+            const frameHost=webView.querySelector(':scope > div');
+            if(!frameHost) throw new Error('Vanta web view frame host is missing');
             frameHost.insertBefore(iframe, browserLoading);
             const tab={id,appId:app.id,title:app.title,icon:app.icon,url:app.url,type:app.type,target:app.target||app.url,proxyFrame:null,iframe,lastFrameUrl:'',urlWatcher:null,proxyOpening:null,navSeq:0,userNavigatingUntil:0};
-            iframe.src=(app.id==='home') ? new URL('/home.html',location.origin).href : 'about:blank';
+            iframe.src=(app.id==='home') ? new URL('./home.html',location.href).href : 'about:blank';
             tabs.push(tab);
             iframe.addEventListener('load',()=>{if(activeTabId===id)hideSiteLoading(); updateTabAddressFromFrame(tab);});
             renderTabs(); switchTab(id);
