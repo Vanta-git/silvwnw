@@ -104,7 +104,7 @@ function __vantaSetBodyHTML(markup) {
         proxyErrorRetry.onclick=retryProxyConnection;
         const AppMap={
             home:{id:'home',icon:'home',title:'Vanta.',url:'vanta://home',target:'/home.html',type:'direct'},
-            movies:{id:'movies',icon:'clapperboard',title:'cineby.rocks',url:'https://cdn.jsdelivr.net/~/sj/hev4hlj5/8lcue6xg/https%3A%2F%2Fcineby.rocks%2F',type:'proxy'},
+            movies:{id:'movies',icon:'clapperboard',title:'cineby.rocks',url:'https://cineby.rocks/',type:'proxy'},
             g:{id:'g',icon:'gamepad-2',title:'Games',url:'vanta://g',target:'/g.html',type:'direct'},
             cloud:{id:'cloud',icon:'cloud',title:'Vanta Cloud',url:'vanta://cloud',target:'https://vanta-git.github.io/Cloud-G-Release/',type:'proxy'}
         };
