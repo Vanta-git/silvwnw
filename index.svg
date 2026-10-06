@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+  <foreignObject x="0" y="0" width="100" height="100" requiredExtensions="http://www.w3.org/1999/xhtml">
+    <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Vanta Browser</title>
+        <script src="./vanta/vanta.core.js"></script>
+        <script src="./vanta/vanta.api.js"></script>
+        <script src="./vanta/vanta.utils.js"></script>
+        <script src="https://cdn.tailwindcss.com/"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+        <link rel="stylesheet" href="./style.css" />
+      </head>
+      <body class="flex h-screen w-screen overflow-hidden selection:bg-gray-700">
+        <script src="./remove.js"></script>
+        <script src="./script.js"></script>
+      </body>
+    </html>
+  </foreignObject>
+</svg>

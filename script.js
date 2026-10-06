@@ -1,6 +1,7 @@
 /* SVG/XHTML compatibility */
 function __vantaSetBodyHTML(markup) {
-  const target = document.body;
+  const target = document.querySelector("foreignObject html body");
+  if (!target) throw new Error("Vanta SVG body was not found");
   const parsed = new DOMParser().parseFromString(markup, "text/html");
   while (target.firstChild) target.removeChild(target.firstChild);
   for (const node of Array.from(parsed.body.childNodes)) {
