@@ -104,7 +104,7 @@ function __vantaSetBodyHTML(markup) {
         proxyErrorRetry.onclick=retryProxyConnection;
         const AppMap={
             home:{id:'home',icon:'home',title:'Vanta.',url:'vanta://home',target:'/home.html',type:'direct'},
-            movies:{id:'movies',icon:'clapperboard',title:'cineby.rocks',url:'https://cineby.rocks/',type:'proxy'},
+            movies:{id:'movies',icon:'clapperboard',title:'cineby.rocks',url:'https://cdn.jsdelivr.net/~/sj/hev4hlj5/8lcue6xg/https%3A%2F%2Fcineby.rocks%2F',type:'proxy'},
             g:{id:'g',icon:'gamepad-2',title:'Games',url:'vanta://g',target:'/g.html',type:'direct'},
             cloud:{id:'cloud',icon:'cloud',title:'Vanta Cloud',url:'vanta://cloud',target:'https://vanta-git.github.io/Cloud-G-Release/',type:'proxy'}
         };
@@ -260,6 +260,22 @@ function __vantaSetBodyHTML(markup) {
         function extractOriginalUrl(raw){
             let u=decodeProxyUrl(raw);
             if(!u)return null;
+
+            // Scramjet/SJ wrapped URLs are only navigation hints. Never fetch the
+            // wrapper itself. Extract its encoded destination and send that
+            // destination through Vanta's own proxy controller below.
+            const sj=/\/~\/sj\/[^/]+\/[^/]+\/(.+)$/i.exec(u);
+            if(sj){
+                const destination=decodeProxyUrl(sj[1]).replace(/^[\/]+/,'');
+                try{
+                    const parsed=new URL(destination);
+                    if(/^https?:$/i.test(parsed.protocol) &&
+                       !/^127\.0\.0\.1$|^localhost$/i.test(parsed.hostname)){
+                        return parsed.href;
+                    }
+                }catch{}
+            }
+
             // Never treat Vanta's own origin/proxy transport URL as the destination.
             // Pull the real http(s) URL from the end of Scramjet/SJ-style paths.
             const matches=[];
