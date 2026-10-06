@@ -1,0 +1,8 @@
+const CDN = "https://cdn.jsdelivr.net/gh/Vanta-git/Two-jet-Storage@main";
+importScripts(CDN + "/controller/controller.sw.js");
+
+self.addEventListener("fetch", event => {
+  if (self.$scramjetController?.shouldRoute(event)) {
+    event.respondWith(self.$scramjetController.route(event));
+  }
+});
