@@ -261,10 +261,22 @@ function __vantaSetBodyHTML(markup) {
             let u=decodeProxyUrl(raw);
             if(!u)return null;
 
-            // Scramjet/SJ wrapped URLs are only navigation hints. Never fetch the
-            // wrapper itself. Extract its encoded destination and send that
-            // destination through Vanta's own proxy controller below.
-            const sj=/\/~\/sj\/[^/]+\/[^/]+\/(.+)$/i.exec(u);
+            // Scramjet/SJ wrapper URLs are navigation hints only. In particular,
+            // never send a cdn.jsdelivr.net /~/sj/... URL to the network.
+            // Pull out its final encoded destination and let Vanta's controller
+            // proxy that destination itself.
+            const jsdelivrSj=/^https?:\/\/cdn\.jsdelivr\.net\/~\/sj\/[^/]+\/[^/]+\/(.+)$/i.exec(u);
+            const sj=jsdelivrSj || /\/~\/sj\/[^/]+\/[^/]+\/(.+)$/i.exec(u);
+            if(jsdelivrSj){
+                const destination=decodeProxyUrl(jsdelivrSj[1]).replace(/^[\/]+/,'');
+                try{
+                    const parsed=new URL(destination);
+                    if(/^https?:$/i.test(parsed.protocol) &&
+                       !/^127\.0\.0\.1$|^localhost$/i.test(parsed.hostname)){
+                        return parsed.href;
+                    }
+                }catch{}
+            }
             if(sj){
                 const destination=decodeProxyUrl(sj[1]).replace(/^[\/]+/,'');
                 try{
